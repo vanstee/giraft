@@ -1,5 +1,21 @@
 require 'spec_helper'
 
+describe Giraft::State do
+  let(:state) { Giraft::State.new }
+
+  it 'initializes role to follower' do
+    expect(state.role).to eq(:follower)
+  end
+
+  context 'with initialization parameters' do
+    let(:state) { Giraft::State.new(:leader) }
+
+    it 'allows for initializing with a role' do
+      expect(state.role).to eq(:leader)
+    end
+  end
+end
+
 describe Giraft::PersistentState do
   let(:persistent_state) { Giraft::PersistentState.new }
 
