@@ -11,7 +11,15 @@ module Giraft
     end
 
     def handle_request
-      response if accept_vote?
+      if accept_vote?
+        apply_vote
+        response
+      end
+    end
+
+    def apply_vote
+      state.current_term = request_vote.term
+      state.voted_for = request_vote.candidate_id
     end
 
     def response

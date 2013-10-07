@@ -6,8 +6,27 @@ describe Giraft::RequestVoteCoordinator do
   let(:response) { Giraft::RequestVoteResponse.new }
   let(:coordinator) { Giraft::RequestVoteCoordinator.new(state, request_vote) }
 
+  it 'records the vote if the vote is accepted' do
+    coordinator.stub(:accept_vote?) { true }
+
+    expect(coordinator).to receive(:apply_vote)
+
+    coordinator.handle_request
+  end
+
+  it 'copies request for votes over to the local state when accepting a vote' do
+    request_vote.stub(:term) { 1 }
+    request_vote.stub(:candidate_id) { 2 }
+
+    expect(state).to receive(:current_term=).with(1)
+    expect(state).to receive(:voted_for=).with(2)
+
+    coordinator.apply_vote
+  end
+
   it 'returns a response if the vote is accepted' do
     coordinator.stub(:accept_vote?) { true }
+    coordinator.stub(:apply_vote)
     coordinator.stub(:response) { response }
 
     expect(coordinator.handle_request).to eq(response)
