@@ -4,6 +4,8 @@ module Giraft
   class State
     extend Forwardable
 
+    ROLES = [:follower, :candidate, :leader]
+
     attr_accessor :role
 
     def_delegators :persistent_state, :current_term, :voted_for, :log
@@ -15,6 +17,12 @@ module Giraft
       self.persistent_state = PersistentState.new
       self.volatile_state = VolatileState.new
       self.leader_state = LeaderState.new
+    end
+
+    ROLES.each do |role_name|
+      define_method("#{role_name}?") do
+        role == role_name
+      end
     end
 
     private
