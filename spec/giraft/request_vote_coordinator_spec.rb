@@ -64,25 +64,4 @@ describe Giraft::RequestVoteCoordinator do
 
     expect(coordinator.empty_vote?).to be_true
   end
-
-  it 'knows when the request has a higher term' do
-    state.stub(:current_term) { 1 }
-    request_vote.stub(:term) { 2 }
-
-    expect(coordinator.higher_term?).to be_true
-  end
-
-  it 'knows when the request has the same term' do
-    state.stub(:current_term) { 1 }
-    request_vote.stub(:term) { 1 }
-
-    expect(coordinator.current_term?).to be_true
-  end
-
-  it 'knows when the request has a lower term' do
-    state.stub(:current_term) { 2 }
-    request_vote.stub(:term) { 1 }
-
-    expect(coordinator.lower_term?).to be_true
-  end
 end

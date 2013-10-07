@@ -1,3 +1,6 @@
+require 'giraft/request_vote_coordinator'
+require 'giraft/state'
+
 require 'forwardable'
 
 module Giraft

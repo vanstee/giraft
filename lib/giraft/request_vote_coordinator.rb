@@ -1,9 +1,14 @@
+require 'giraft/response_coordinator'
+
 module Giraft
   class RequestVoteResponse
   end
 
   class RequestVoteCoordinator
+    include ResponseCoordinator
+
     attr_accessor :state, :request_vote
+    alias_method :request, :request_vote
 
     def initialize(state, request_vote)
       self.state = state
@@ -40,18 +45,6 @@ module Giraft
 
     def empty_vote?
       state.voted_for.nil?
-    end
-
-    def higher_term?
-      request_vote.term > state.current_term
-    end
-
-    def current_term?
-      request_vote.term == state.current_term
-    end
-
-    def lower_term?
-      request_vote.term < state.current_term
     end
   end
 end
