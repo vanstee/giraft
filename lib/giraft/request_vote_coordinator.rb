@@ -1,10 +1,21 @@
 module Giraft
+  class RequestVoteResponse
+  end
+
   class RequestVoteCoordinator
     attr_accessor :state, :request_vote
 
     def initialize(state, request_vote)
       self.state = state
       self.request_vote = request_vote
+    end
+
+    def handle_request
+      response if accept_vote?
+    end
+
+    def response
+      RequestVoteResponse.new
     end
 
     def accept_vote?

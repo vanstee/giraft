@@ -3,7 +3,21 @@ require 'spec_helper'
 describe Giraft::RequestVoteCoordinator do
   let(:state) { double('Giraft::State') }
   let(:request_vote) { double('Giraft::RequestVote') }
+  let(:response) { Giraft::RequestVoteResponse.new }
   let(:coordinator) { Giraft::RequestVoteCoordinator.new(state, request_vote) }
+
+  it 'returns a response if the vote is accepted' do
+    coordinator.stub(:accept_vote?) { true }
+    coordinator.stub(:response) { response }
+
+    expect(coordinator.handle_request).to eq(response)
+  end
+
+  it 'does not return a response if the vote is not accepted' do
+    coordinator.stub(:accept_vote?) { false }
+
+    expect(coordinator.handle_request).to eq(nil)
+  end
 
   it 'accepts request votes with higher terms and when we have not already voted' do
     coordinator.stub(:higher_term?) { false }
