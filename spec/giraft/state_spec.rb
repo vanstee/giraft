@@ -24,7 +24,7 @@ describe Giraft::PersistentState do
   end
 
   it 'initializes log to an empty array' do
-    expect(persistent_state.log).to eq([])
+    expect(persistent_state.log).to eq(Giraft::Log.new)
   end
 end
 

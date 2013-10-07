@@ -1,3 +1,5 @@
+require 'giraft/log'
+
 require 'forwardable'
 
 module Giraft
@@ -35,7 +37,7 @@ module Giraft
 
     def initialize
       self.current_term = 0
-      self.log = []
+      self.log = Log.new
     end
   end
 
