@@ -1,3 +1,6 @@
+require 'giraft/append_entries'
+require 'giraft/append_entries_coordinator'
+require 'giraft/request_vote'
 require 'giraft/request_vote_coordinator'
 require 'giraft/state'
 
@@ -15,18 +18,23 @@ module Giraft
       self.state = state || default_state
     end
 
-    def request_vote(request)
-      with_coordinator(request) do |coordinator|
-        coordinator.handle_request
+    [:request_vote, :append_entries].each do |request_name|
+      define_method(request_name) do |request|
+        with_coordinator(request, &:handle_request)
       end
     end
 
     def with_coordinator(request)
-      yield request_vote_coordinator(request)
+      yield coordinator(request)
     end
 
-    def request_vote_coordinator(request)
-      RequestVoteCoordinator.new(state, request)
+    def coordinator(request)
+      case request
+      when RequestVote
+        RequestVoteCoordinator.new(state, request)
+      when AppendEntries
+        AppendEntriesCoordinator.new(state, request)
+      end
     end
 
     def default_state

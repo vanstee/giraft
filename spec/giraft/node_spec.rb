@@ -2,14 +2,15 @@ require 'spec_helper'
 
 describe Giraft::Node do
   let(:node) { Giraft::Node.new }
-  let(:request) { double('Giraft::RequestVote') }
+  let(:request_vote_options) { { term: 1, candidate_id: 1, last_log_index: 1, last_log_term: 1 } }
+  let(:request) { Giraft::RequestVote.new(request_vote_options) }
   let(:coordinator) { double('Giraft::RequestVoteCoordinator') }
 
   it 'defaults to a follower' do
     expect(node).to be_follower
   end
 
-  it 'asks a coordinator for a response to a request vote call' do
+  it 'asks a coordinator for a response to a specific request' do
     expect(node).to receive(:with_coordinator).and_yield(coordinator)
     expect(coordinator).to receive(:handle_request)
 
@@ -25,6 +26,6 @@ describe Giraft::Node do
   it 'creates a coordinator with the state of the node and the request' do
     expect(Giraft::RequestVoteCoordinator).to receive(:new).with(node.state, request)
 
-    node.request_vote_coordinator(request)
+    node.coordinator(request)
   end
 end
