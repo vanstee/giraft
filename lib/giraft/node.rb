@@ -1,5 +1,6 @@
 require 'giraft/append_entries'
 require 'giraft/append_entries_coordinator'
+require 'giraft/coordinator'
 require 'giraft/request_vote'
 require 'giraft/request_vote_coordinator'
 require 'giraft/state'
@@ -29,12 +30,7 @@ module Giraft
     end
 
     def coordinator(request)
-      case request
-      when RequestVote
-        RequestVoteCoordinator.new(state, request)
-      when AppendEntries
-        AppendEntriesCoordinator.new(state, request)
-      end
+      Coordinator.new(state, request)
     end
 
     def default_state
